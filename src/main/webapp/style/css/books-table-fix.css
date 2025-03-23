@@ -1,0 +1,43 @@
+@charset "UTF-8";
+/* Action column specific fixes */
+.books-table td:last-child {
+    text-align: center !important;
+    white-space: nowrap !important;
+    min-width: 160px !important;
+}
+
+/* Force buttons to display inline */
+.btn-update, .btn-delete {
+    display: inline-block !important;
+    width: auto !important;
+    margin: 2px 3px !important;
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+    text-align: center !important;
+    border-radius: 4px !important;
+    text-decoration: none !important;
+    font-weight: normal !important;
+    line-height: normal !important;
+}
+
+/* Button colors */
+.btn-update {
+    background-color: #e6e2dd !important;
+    color: #625f5c !important;
+    border: 1px solid #d1cbc3 !important;
+}
+
+.btn-delete {
+    background-color: #d6ccc6 !important;
+    color: #625f5c !important;
+    border: 1px solid #c4b7ae !important;
+}
+
+/* Hover states */
+.btn-update:hover {
+    background-color: #d1cbc3 !important;
+}
+
+.btn-delete:hover {
+    background-color: #c4b7ae !important;
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Book - Serenity Books</title>
+    <link rel="stylesheet" href="style/css/style.css">
+    <link rel="stylesheet" href="style/css/update-style.css">
+    <!-- Font Awesome for the plus icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Include header -->
+    <div id="header-placeholder"></div>
+    <!-- Main Content -->
+    <section class="page-content">
+        <div class="container">
+            <div class="section-header">
+                <h2>Add New Book</h2>
+                <p>Enter details for the new book</p>
+            </div>
+            <div class="update-form">
+            
+                <form action="BooksController" method="post">
+                
+                    <div class="form-group">
+                        <label for="book-id">Book ID</label>
+                        <input type="text" id="book-id" name="book-id" placeholder="e.g., 5" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="book-title">Book Title</label>
+                        <input type="text" id="book-title" name="book-title" placeholder="Enter book title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="book-price">Price ($)</label>
+                        <input type="number" id="book-price" name="book-price" step="0.01" placeholder="0.00" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="book-amount">Amount in Stock</label>
+                        <input type="number" id="book-amount" name="book-amount" placeholder="0" required>
+                    </div>
+                    
+                     <div class="form-group">
+                        <label for="desc">Description</label>
+                        <input type="text" id="desc" name="desc" placeholder="Enter book description" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="issue-date">Issue Date</label>
+                        <input type="Date" id="issue-date" name="issue-date" placeholder="Enter issue date"  required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ex-date">Expire Date</label>
+                        <input type="Date" id="ex-date" name="ex-date" placeholder="Enter expire date"  required>
+                    </div>
+                    <input type="hidden" name="action" value="add">
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Add Book</button>
+                        <a href="BooksController" class="btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- Include footer -->
+    <div id="footer-placeholder"></div>
+    <script>
+        // Script to load header and footer
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+            });
+            
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            });
+    </script>
+</body>
+</html>
