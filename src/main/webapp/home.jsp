@@ -10,7 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Serenity Books</title>
     <link rel="stylesheet" href="style/css/style.css">
-    <link rel="stylesheet" href="style/css/model.css">
     <link rel="stylesheet" href="style/css/books-table-fix.css">
 </head>
 <body>
@@ -75,9 +74,9 @@
         <!-- In your JSP file -->
 <td>
     <% if (book.getDesc() == null) { %>
-        <a href="BooksController?action=addDetails&id=<%= book.getId() %>" class="btn-update">Add Book Details</a>
         <a href="BooksController?action=editInfo&id=<%= book.getId() %>" class="btn-update">Update</a>
         <a href="BooksController?action=delete&id=<%= book.getId() %>" class="btn-delete">Delete</a>
+        <a href="BooksController?action=addDetails&id=<%= book.getId() %>" class="btn-update">Add Book Details</a>
           
     <% } else { %>
         <a href="BooksController?action=edit&id=<%= book.getId() %>" class="btn-update">Update</a>
@@ -110,50 +109,8 @@
 
    <jsp:include page="footer.html"></jsp:include>
    <jsp:include page="delete-alert.html"></jsp:include>
-   <!-- Modal Popup for messages -->
-<div id="messageModal" class="modal">
-  <div class="modal-content">
-    <span class="close-modal">&times;</span>
-    <div id="modalMessage"></div>
-  </div>
-</div>
+   <jsp:include page="success-failure.jsp"></jsp:include>
+ 
 
-<script>
-  // Modal functionality
-  var modal = document.getElementById("messageModal");
-  var modalMessage = document.getElementById("modalMessage");
-  var closeBtn = document.getElementsByClassName("close-modal")[0];
-  
-  // Close modal when clicking the X
-  closeBtn.onclick = function() {
-    modal.style.display = "none";
-  }
-  
-  // Close modal when clicking outside of it
-  window.onclick = function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  }
-  
-  // Check for messages and show modal if needed
-  window.onload = function() {
-  <% if (session.getAttribute("successMessage") != null) { %>
-    modalMessage.innerHTML = '<div class="success-message"><%= session.getAttribute("successMessage") %></div>';
-    modal.style.display = "block";
-    <% session.removeAttribute("successMessage"); %>
-  <% } else if (session.getAttribute("errorMessage") != null) { %>
-    modalMessage.innerHTML = '<div class="error-message"><%= session.getAttribute("errorMessage") %></div>';
-    modal.style.display = "block";
-    <% session.removeAttribute("errorMessage"); %>
-  <% } %>
-}
-  // Automatically close modal after 3 seconds
-  setTimeout(function() {
-    if (modal.style.display === "block") {
-      modal.style.display = "none";
-    }
-  }, 3000);
-</script>
 </body>
 </html>

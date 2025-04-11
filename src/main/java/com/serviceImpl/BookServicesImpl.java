@@ -8,15 +8,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
+
+import com.DatabaseConnection.DatabaseConnection;
 import com.model.Book;
 import com.service.BookServices;
 
 public class BookServicesImpl implements BookServices {
     
-    private DataSource dataSource;
+	 private final DatabaseConnection dbConnection;
     
     public BookServicesImpl(DataSource dataSource) {
-        this.dataSource = dataSource;
+    	this.dbConnection = new DatabaseConnection(dataSource);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class BookServicesImpl implements BookServices {
         ResultSet rs = null;
         
         try {
-            conn = dataSource.getConnection();
+            conn = dbConnection.getConnection();
             String sql = "SELECT B.BOOKID, B.BOOKNAME, B.BOOKPRICE, B.TotalQuantatity, BD.DESCRIPTION, BD.ISSUE_DATE, BD.EXPIRY_DATE \r\n"
             		+ "FROM BOOKS B \r\n"
             		+ "LEFT OUTER JOIN BOOK_DETAILS BD ON B.BOOKID = BD.BOOKID";
@@ -58,6 +60,7 @@ public class BookServicesImpl implements BookServices {
         }
         return books;
     }
+    
 
     @Override
     public Book getBookByID(int id) {
@@ -66,7 +69,7 @@ public class BookServicesImpl implements BookServices {
         ResultSet rs = null;
         
         try {
-            conn = dataSource.getConnection();
+            conn = dbConnection.getConnection();
             String sql = "SELECT B.BOOKID, B.BOOKNAME, B.BOOKPRICE, B.TotalQuantatity, " 
                     + "BD.DESCRIPTION, BD.EXPIRY_DATE, BD.ISSUE_DATE " 
                     + "FROM BOOKS B " 
@@ -105,7 +108,7 @@ public class BookServicesImpl implements BookServices {
         ResultSet rs = null;
         
         try {
-            conn = dataSource.getConnection();
+            conn = dbConnection.getConnection();
             String sql = "SELECT * FROM BOOKS WHERE BookID = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -137,7 +140,7 @@ public class BookServicesImpl implements BookServices {
         boolean success = false;
         
         try {
-            conn = dataSource.getConnection();
+            conn = dbConnection.getConnection();
             conn.setAutoCommit(false); 
             
            
@@ -197,7 +200,7 @@ public class BookServicesImpl implements BookServices {
         boolean success = false;
         
         try {
-            conn = dataSource.getConnection();
+            conn = dbConnection.getConnection();
             conn.setAutoCommit(false); 
             
             // Insert into BOOK_DETAILS table
@@ -246,7 +249,7 @@ public class BookServicesImpl implements BookServices {
         boolean success = false;
         
         try {
-            conn = dataSource.getConnection();
+            conn = dbConnection.getConnection();
             conn.setAutoCommit(false); // Start transaction
             
             // Update BOOKS table
@@ -306,7 +309,7 @@ public class BookServicesImpl implements BookServices {
         boolean success = false;
         
         try {
-            conn = dataSource.getConnection();
+            conn = dbConnection.getConnection();
             conn.setAutoCommit(false); // Start transaction
             
             // Update BOOKS table
@@ -354,7 +357,7 @@ public class BookServicesImpl implements BookServices {
         boolean success = false;
         
         try {
-            conn = dataSource.getConnection();
+            conn = dbConnection.getConnection();
             
             // Delete from BOOKS table (cascading delete should handle BOOK_DETAILS)
             String sql = "DELETE FROM BOOKS WHERE BookID = ?";
@@ -382,7 +385,7 @@ public class BookServicesImpl implements BookServices {
           boolean success = false;
           
           try {
-              conn = dataSource.getConnection();
+              conn = dbConnection.getConnection();
               
               // Delete from BOOKS table (cascading delete should handle BOOK_DETAILS)
               String sql = "DELETE FROM BOOK_DETAILS WHERE BookID = ?";

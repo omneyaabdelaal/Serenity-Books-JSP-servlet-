@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Serenity Books - Login</title>
-    <link rel="stylesheet" href="style/css/login.css">
         <link rel="stylesheet" href="style/css/style.css">
+    <link rel="stylesheet" href="style/css/login.css">
 </head>
 <body>
-    <header>
+
+  <header>
     <div class="container header-content">
         <div class="logo">Serenity <span>Books</span></div>
-
+        <nav>
+            <ul>
+                
+            </ul>
+        </nav>
     </div>
 </header>
 
@@ -21,16 +26,25 @@
                 <h2>Welcome back,</h2>
                 <p class="subtitle">Book lover</p>
                 
-                <form class="login-form" action="UsersController" method="post">
+                <form action="UsersController" method="get" class="login-form" >
                     <div class="form-group">
-                        <input type="text" id="username" placeholder="Username or Email" required>
+                        <input type="text" id="username" placeholder="email" name="email" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" id="password" placeholder="Password" required>
+                        <input type="password" id="password" placeholder="Password" name="Password" required>
                     </div>
-                    <button type="submit" class="login-btn">Sign In</button>
                     
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="terms" name='rememberMe'>
+                        <label for="terms">Remember me </label>
+                    </div>
+                    
+                    <input type="hidden" name="action" value="login" >
+                    
+                    <button type="submit" class="login-btn">Sign In</button>
                    
+                    
+                    
                 </form>
             </div>
             
@@ -38,9 +52,11 @@
                 <div class="signup-content">
                     <h2>New here?</h2>
                     <p>Join us and discover your next favorite book from our collection of curated titles.</p>
-                    <a href="sign-up.html">
-    <button class="signup-btn">Sign Up</button>
-</a>
+                    
+                    <a href="signup.jsp">
+					    <button class="signup-btn">Sign Up</button>
+					</a>
+            
                 </div>
             </div>
         </div>
@@ -49,5 +65,7 @@
     <footer>
         <p>&copy; 2025 Serenity Books. All rights reserved.</p>
     </footer>
+    
+       <jsp:include page="success-failure.jsp"></jsp:include>
 </body>
 </html>

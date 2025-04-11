@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import com.DatabaseService.DatabaseService;
 import com.model.Book;
 import com.serviceImpl.BookServicesImpl;
 
@@ -22,14 +23,13 @@ public class BooksController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
 
-    @Resource(name = "jdbc/item")
-    private DataSource dataSource;
+
     private BookServicesImpl bookServicesImpl;
     
     @Override
     public void init() throws ServletException {
         super.init();
-        bookServicesImpl = new BookServicesImpl(dataSource);
+        bookServicesImpl = new BookServicesImpl(DatabaseService.getInstance().getDataSource());
     }
     
     //////////////////////////////////////
@@ -189,9 +189,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             boolean result = bookServicesImpl.updateBook(book);
             
             if (result) {
-            	request.getSession().setAttribute("successMessage", "Book updated successfully!");
+            	request.setAttribute("successMessage", "Book updated successfully!");
             } else {
-            	request.getSession().setAttribute("errorMessage", "Failed to update book. Please try again.");
+            	request.setAttribute("errorMessage", "Failed to update book. Please try again.");
                 
             }
             
@@ -218,9 +218,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             boolean result = bookServicesImpl.updateBookInfo(book);
             
             if (result) {
-            	request.getSession().setAttribute("successMessage", "Book updated successfully!");
+            	request.setAttribute("successMessage", "Book updated successfully!");
             } else {
-            	request.getSession().setAttribute("errorMessage", "Failed to update book. Please try again.");
+            	request.setAttribute("errorMessage", "Failed to update book. Please try again.");
                 
             }
             
@@ -272,9 +272,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
        boolean result=bookServicesImpl.addBook(book);
        
        if (result) {
-       	request.getSession().setAttribute("successMessage", "Book added successfully!");
+       	request.setAttribute("successMessage", "Book added successfully!");
        } else {
-       	request.getSession().setAttribute("errorMessage", "Failed to add book. Please try again.");
+       	request.setAttribute("errorMessage", "Failed to add book. Please try again.");
            
        }
        loadBooks(request, response);
@@ -293,9 +293,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
        System.out.println(result);
        
        if (result) {
-       	request.getSession().setAttribute("successMessage", "Book added successfully!");
+       	request.setAttribute("successMessage", "Book added successfully!");
        } else {
-       	request.getSession().setAttribute("errorMessage", "Failed to add book. Please try again.");
+       	request.setAttribute("errorMessage", "Failed to add book. Please try again.");
            
        }
        loadBooks(request, response);

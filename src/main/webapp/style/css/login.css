@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* Global Styles */
 * {
     margin: 0;
@@ -184,7 +186,7 @@ input:focus {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/books0.jpg');
+     background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/books0.jpg');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -274,4 +276,28 @@ footer {
     nav ul li {
         margin: 5px 10px;
     }
+}
+
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox input {
+    width: auto;
+}
+
+.checkbox label {
+    margin-bottom: 0;
+}
+
+.checkbox a {
+    color: #a9957b;
+    text-decoration: none;
+}
+
+.checkbox a:hover {
+    text-decoration: underline;
 }
