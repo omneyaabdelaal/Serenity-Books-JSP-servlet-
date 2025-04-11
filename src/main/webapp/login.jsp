@@ -26,7 +26,7 @@
                 <h2>Welcome back,</h2>
                 <p class="subtitle">Book lover</p>
                 
-                <form action="UsersController" method="get" class="login-form" >
+                <form action="UsersController" method="post" class="login-form" >
                     <div class="form-group">
                         <input type="text" id="username" placeholder="email" name="email" required>
                     </div>
