@@ -1,18 +1,14 @@
 package com.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.List;
-
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
-
+import javax.servlet.http.HttpSession;
 import com.DatabaseService.DatabaseService;
 import com.model.Book;
 import com.serviceImpl.BookServicesImpl;
@@ -21,9 +17,6 @@ import com.serviceImpl.BookServicesImpl;
 public class BooksController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
-   
-
 
     private BookServicesImpl bookServicesImpl;
     
@@ -104,9 +97,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         List<Book> books = bookServicesImpl.getAllBooks();
         request.setAttribute("Books", books);
         
-        //System.out.println(books.get(0).getDesc());
-        try {
+     
         
+        try {
             request.getRequestDispatcher("/home.jsp").forward(request, response);
         } catch (ServletException | IOException e) {
             e.printStackTrace();
@@ -136,7 +129,13 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         } catch (Exception e) {
             System.out.println("Exception in loadBook: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Error loading book: " + e.getMessage());
+            HttpSession session = request.getSession();
+            session.setAttribute("errorMessage", "Error loading book: " + e.getMessage());
+            try {
+                response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
         }
     }
     
@@ -158,18 +157,22 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
              } else {
                  System.out.println("Book found, forwarding to update.jsp"); 
                  if(request.getParameter("action").equals("addDetails")) {
-                 request.getRequestDispatcher("/add-details.jsp").forward(request, response);
-             }else {
-            	 
+                     request.getRequestDispatcher("/add-details.jsp").forward(request, response);
+                 } else {
                      request.getRequestDispatcher("/update-info.jsp").forward(request, response);
-             }
-                 
                  }
+             }
              
          } catch (Exception e) {
              System.out.println("Exception in loadBook: " + e.getMessage());
              e.printStackTrace();
-             request.setAttribute("errorMessage", "Error loading book: " + e.getMessage());
+             HttpSession session = request.getSession();
+             session.setAttribute("errorMessage", "Error loading book: " + e.getMessage());
+             try {
+                 response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+             } catch (IOException ioe) {
+                 ioe.printStackTrace();
+             }
          }
   	}
     
@@ -185,16 +188,15 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 request.getParameter("desc"),
                 Date.valueOf(request.getParameter("issue-date")),
                 Date.valueOf(request.getParameter("ex-date"))
-                
             );
             
             boolean result = bookServicesImpl.updateBook(book);
             
+            HttpSession session = request.getSession();
             if (result) {
-            	request.setAttribute("successMessage", "Book updated successfully!");
+            	session.setAttribute("successMessage", "Book updated successfully!");
             } else {
-            	request.setAttribute("errorMessage", "Failed to update book. Please try again.");
-                
+            	session.setAttribute("errorMessage", "Failed to update book. Please try again.");
             }
             
             response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
@@ -202,7 +204,13 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         } catch (Exception e) {
             System.out.println("Exception in updateBook: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Error updating book: " + e.getMessage());
+            HttpSession session = request.getSession();
+            session.setAttribute("errorMessage", "Error updating book: " + e.getMessage());
+            try {
+                response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
         }
     }
     //////////////////////////////////////////////////////////
@@ -219,11 +227,11 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             
             boolean result = bookServicesImpl.updateBookInfo(book);
             
+            HttpSession session = request.getSession();
             if (result) {
-            	request.setAttribute("successMessage", "Book updated successfully!");
+            	session.setAttribute("successMessage", "Book updated successfully!");
             } else {
-            	request.setAttribute("errorMessage", "Failed to update book. Please try again.");
-                
+            	session.setAttribute("errorMessage", "Failed to update book. Please try again.");
             }
             
             response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
@@ -231,18 +239,39 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         } catch (Exception e) {
             System.out.println("Exception in updateBook: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Error updating book: " + e.getMessage());
+            HttpSession session = request.getSession();
+            session.setAttribute("errorMessage", "Error updating book: " + e.getMessage());
+            try {
+                response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
         }
     }
     
     /////////////////////// 
     private void deleteBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
-        int id= Integer.parseInt(request.getParameter("id"));
-       bookServicesImpl.deleteBookByID(id);
-       // Redirect to the book list
-       response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
-        
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            boolean result = bookServicesImpl.deleteBookByID(id);
+            
+            HttpSession session = request.getSession();
+            if (result) {
+                session.setAttribute("successMessage", "Book deleted successfully!");
+            } else {
+                session.setAttribute("errorMessage", "Failed to delete book. Please try again.");
+            }
+            
+            // Redirect to the book list
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+        } catch (Exception e) {
+            System.out.println("Exception in deleteBook: " + e.getMessage());
+            e.printStackTrace();
+            HttpSession session = request.getSession();
+            session.setAttribute("errorMessage", "Error deleting book: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+        }
     }
     
     
@@ -251,58 +280,88 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     /////////////////////// 
     private void deleteBookDetails(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
-        int id= Integer.parseInt(request.getParameter("id"));
-       bookServicesImpl.deleteBookDetailsByID(id);
-       // Redirect to the book list
-       response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
-        
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            boolean result = bookServicesImpl.deleteBookDetailsByID(id);
+            
+            HttpSession session = request.getSession();
+            if (result) {
+                session.setAttribute("successMessage", "Book details deleted successfully!");
+            } else {
+                session.setAttribute("errorMessage", "Failed to delete book details. Please try again.");
+            }
+            
+            // Redirect to the book list
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+        } catch (Exception e) {
+            System.out.println("Exception in deleteBookDetails: " + e.getMessage());
+            e.printStackTrace();
+            HttpSession session = request.getSession();
+            session.setAttribute("errorMessage", "Error deleting book details: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+        }
     }
     
     
     /////////////////////////
     private void addBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	Book book = new Book(
-            Integer.parseInt(request.getParameter("book-id")),
-            request.getParameter("book-title"),
-            Double.parseDouble(request.getParameter("book-price")), 
-            Integer.parseInt(request.getParameter("book-amount")),
-            request.getParameter("desc"),
-            Date.valueOf(request.getParameter("issue-date")),
-            Date.valueOf(request.getParameter("ex-date"))
+        try {
+            Book book = new Book(
+                Integer.parseInt(request.getParameter("book-id")),
+                request.getParameter("book-title"),
+                Double.parseDouble(request.getParameter("book-price")), 
+                Integer.parseInt(request.getParameter("book-amount")),
+                request.getParameter("desc"),
+                Date.valueOf(request.getParameter("issue-date")),
+                Date.valueOf(request.getParameter("ex-date"))
             );
-       
-       boolean result=bookServicesImpl.addBook(book);
-       
-       if (result) {
-       	request.setAttribute("successMessage", "Book added successfully!");
-       } else {
-       	request.setAttribute("errorMessage", "Failed to add book. Please try again.");
            
-       }
-       response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
-        
+            boolean result = bookServicesImpl.addBook(book);
+           
+            HttpSession session = request.getSession();
+            if (result) {
+                session.setAttribute("successMessage", "Book added successfully!");
+            } else {
+                session.setAttribute("errorMessage", "Failed to add book. Please try again.");
+            }
+            
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+        } catch (Exception e) {
+            System.out.println("Exception in addBook: " + e.getMessage());
+            e.printStackTrace();
+            HttpSession session = request.getSession();
+            session.setAttribute("errorMessage", "Error adding book: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+        }
     }
+    
     ////////////////////////////////////////////////
     private void addBookDetails(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	Book book = new Book(
-            Integer.parseInt(request.getParameter("book-id")),
-            request.getParameter("desc"),
-            Date.valueOf(request.getParameter("issue-date")),
-            Date.valueOf(request.getParameter("ex-date"))
+        try {
+            Book book = new Book(
+                Integer.parseInt(request.getParameter("book-id")),
+                request.getParameter("desc"),
+                Date.valueOf(request.getParameter("issue-date")),
+                Date.valueOf(request.getParameter("ex-date"))
             );
-       
-       boolean result=bookServicesImpl.addBookDetails(book);
-       System.out.println(result);
-       
-       if (result) {
-       	request.setAttribute("successMessage", "Book added successfully!");
-       } else {
-       	request.setAttribute("errorMessage", "Failed to add book. Please try again.");
            
-       }
-       response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
-        
+            boolean result = bookServicesImpl.addBookDetails(book);
+            System.out.println(result);
+           
+            HttpSession session = request.getSession();
+            if (result) {
+                session.setAttribute("successMessage", "Book details added successfully!");
+            } else {
+                session.setAttribute("errorMessage", "Failed to add book details. Please try again.");
+            }
+            
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+        } catch (Exception e) {
+            System.out.println("Exception in addBookDetails: " + e.getMessage());
+            e.printStackTrace();
+            HttpSession session = request.getSession();
+            session.setAttribute("errorMessage", "Error adding book details: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
+        }
     }
-
-
 }

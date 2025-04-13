@@ -36,14 +36,14 @@
   
   // Check for messages and show modal if needed
   window.onload = function() {
-  <% if (request.getAttribute("successMessage") != null) { %>
-    modalMessage.innerHTML = '<div class="success-message"><%= request.getAttribute("successMessage") %></div>';
+  <% if (session.getAttribute("successMessage") != null) { %>
+    modalMessage.innerHTML = '<div class="success-message"><%= session.getAttribute("successMessage") %></div>';
     modal.style.display = "block";
-    <% request.removeAttribute("successMessage"); %>
-  <% } else if (request.getAttribute("errorMessage") != null) { %>
-    modalMessage.innerHTML = '<div class="error-message"><%= request.getAttribute("errorMessage") %></div>';
+    <% session.removeAttribute("successMessage"); %>
+  <% } else if (session.getAttribute("errorMessage") != null) { %>
+    modalMessage.innerHTML = '<div class="error-message"><%= session.getAttribute("errorMessage") %></div>';
     modal.style.display = "block";
-    <% request.removeAttribute("errorMessage"); %>
+    <% session.removeAttribute("errorMessage"); %>
   <% } %>
 }
   // Automatically close modal after 3 seconds

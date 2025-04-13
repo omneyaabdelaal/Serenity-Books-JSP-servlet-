@@ -47,7 +47,7 @@ public class UsersController extends HttpServlet {
             login(request, response);
         }
         
-        try {
+
             switch (action) {
                 case "sign-up":
                     signUp(request, response);
@@ -61,9 +61,7 @@ public class UsersController extends HttpServlet {
                 default:
                 	login(request, response);
             }
-        } catch (Exception e) {
-            handleException(request, response, e);
-        }
+       
     }
     
     protected void signUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -76,13 +74,13 @@ public class UsersController extends HttpServlet {
         
         boolean result = userServicesImpl.createAccount(user);
         
+        HttpSession session = request.getSession();
         if (!result) {
             // Account creation failed
-            request.setAttribute("errorMessage", "Account creation failed. This email may already be registered.");
+        	session.setAttribute("errorMessage", "Account creation failed. This email may already be registered.");
             request.getRequestDispatcher("signup.jsp").forward(request, response);
         } else {
             // Account created successfully
-            HttpSession session = request.getSession();
             session.setAttribute("User", user);
             response.sendRedirect(request.getContextPath() + "/BooksController");
         }
@@ -93,9 +91,9 @@ public class UsersController extends HttpServlet {
         System.out.println(request.getParameter("email"));
         boolean result = userServicesImpl.login(user);
         
+        HttpSession session = request.getSession();
         if (result) {
             // Login successful
-            HttpSession session = request.getSession();
             session.setAttribute("User", user);
             
             if ("on".equals(request.getParameter("rememberMe"))) {
@@ -114,18 +112,12 @@ public class UsersController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/BooksController");
         } else {
             // Login failed
-            request.setAttribute("errorMessage", "Invalid email or password. Please try again.");
+        	session.setAttribute("errorMessage", "Invalid email or password. Please try again.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
     
-    private void handleException(HttpServletRequest request, HttpServletResponse response, Exception e) 
-            throws ServletException, IOException {
-        e.printStackTrace();
-        request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-        request.getRequestDispatcher("error.jsp").forward(request, response);
-    }
-    
+   
     
     protected String generateAuthToken(String email, String password) {
     	
