@@ -59,6 +59,7 @@ public class BooksController extends HttpServlet {
                     break;
                 case "deleteDetails":
                 	deleteBookDetails(request, response);
+                	break;
                 	
                 default:
                     loadBooks(request, response);
@@ -196,7 +197,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 
             }
             
-            loadBooks(request, response);
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
             
         } catch (Exception e) {
             System.out.println("Exception in updateBook: " + e.getMessage());
@@ -225,7 +226,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 
             }
             
-            loadBooks(request, response);
+            response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
             
         } catch (Exception e) {
             System.out.println("Exception in updateBook: " + e.getMessage());
@@ -235,12 +236,12 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     }
     
     /////////////////////// 
-    private void deleteBook(HttpServletRequest request, HttpServletResponse response) {
+    private void deleteBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         int id= Integer.parseInt(request.getParameter("id"));
        bookServicesImpl.deleteBookByID(id);
        // Redirect to the book list
-       loadBooks(request, response);
+       response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
         
     }
     
@@ -248,18 +249,18 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     /////////////////////////
     
     /////////////////////// 
-    private void deleteBookDetails(HttpServletRequest request, HttpServletResponse response) {
+    private void deleteBookDetails(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         int id= Integer.parseInt(request.getParameter("id"));
        bookServicesImpl.deleteBookDetailsByID(id);
        // Redirect to the book list
-       loadBooks(request, response);
+       response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
         
     }
     
     
     /////////////////////////
-    private void addBook(HttpServletRequest request, HttpServletResponse response) {
+    private void addBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	Book book = new Book(
             Integer.parseInt(request.getParameter("book-id")),
             request.getParameter("book-title"),
@@ -278,11 +279,11 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
        	request.setAttribute("errorMessage", "Failed to add book. Please try again.");
            
        }
-       loadBooks(request, response);
+       response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
         
     }
     ////////////////////////////////////////////////
-    private void addBookDetails(HttpServletRequest request, HttpServletResponse response) {
+    private void addBookDetails(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	Book book = new Book(
             Integer.parseInt(request.getParameter("book-id")),
             request.getParameter("desc"),
@@ -299,7 +300,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
        	request.setAttribute("errorMessage", "Failed to add book. Please try again.");
            
        }
-       loadBooks(request, response);
+       response.sendRedirect(request.getContextPath() + "/BooksController?action=list");
         
     }
 
